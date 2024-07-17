@@ -3,6 +3,7 @@ from CollideObjectBase import *
 from direct.task.Task import TaskManager
 from direct.interval.IntervalGlobal import Sequence
 import DefensePaths as defensePaths
+import random
 
 class Planet(SphereCollideObject):
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, texPath: str, posVec: Vec3, scaleVec: float):
@@ -63,7 +64,7 @@ class Missile(SphereCollideObject):
 
 class Orbiter(SphereCollideObject):
     numOrbits = 0 # Unique names for tasks
-    velocity = 0.005 # Speed of drone
+    velocity = random.uniform(0.005, 0.02) # Speed of drone
     cloudTimer = 240 # How long for drone to move
 
     def __init__(self, loader: Loader, taskMgr: TaskManager, modelPath: str, parentNode: NodePath, nodeName: str, scaleVec: Vec3, texPath: str, centralObject: PlacedObject, orbitRadius: float, orbitType: str, staringAt: Vec3):
@@ -98,6 +99,7 @@ class Orbiter(SphereCollideObject):
         
         self.modelNode.lookAt(self.staringAt.modelNode)
         return task.cont
+
 
 class Wanderer(SphereCollideObject):
     numWanderers = 0
