@@ -115,7 +115,8 @@ class MyApp(ShowBase):
                                                  6.0, self.rootAssetFolder + "/DroneDefender/octotoad1_auv.png", self.OrbPlanet, random.randint(700, 800), "MLB", self.Hero)
         self.Sentinal4 = spaceJamClasses.Orbiter(self.loader, self.taskMgr, self.rootAssetFolder + "/DroneDefender/DroneDefender.obj", self.render, "Drone-CloudOrb2", 
                                                  6.0, self.rootAssetFolder + "/DroneDefender/octotoad1_auv.png", self.OrbPlanet, random.randint(500, 600), "Cloud", self.Hero)
-        self.Wanderer1 = spaceJamClasses.Wanderer(self.loader, self.rootAssetFolder + "/DroneDefender/DroneDefender.obj", self.render, "Drone", 6.0, self.rootAssetFolder + "/DroneDefender/octotoad1_auv.png", self.Hero)
+        self.Wanderer1 = spaceJamClasses.Wanderer(self.loader, self.rootAssetFolder + "/DroneDefender/DroneDefender.obj", self.render, "Drone-W1", 6.0, self.rootAssetFolder + "/DroneDefender/octotoad1_auv.png", self.Hero)
+        self.Wanderer2 = spaceJamClasses.Wanderer(self.loader, self.rootAssetFolder + "/DroneDefender/DroneDefender.obj", self.render, "Drone-W2", 6.0, self.rootAssetFolder + "/DroneDefender/octotoad1_auv.png", self.Hero)
     
     def _randomize_planets(self, planets):
         '''Planet RNG helper function.'''

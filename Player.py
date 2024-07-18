@@ -99,7 +99,6 @@ class Spaceship(SphereCollideObject): # Player
         
         else:
             if not self.taskMgr.hasTaskNamed('reload'):
-                print('Preparing reload...')
                 self.taskMgr.doMethodLater(0, self._Reload, 'reload') # Doing it 0 seconds later
                 return Task.cont
             
@@ -132,7 +131,6 @@ class Spaceship(SphereCollideObject): # Player
             
         else:
             if not self.taskMgr.hasTaskNamed('reload'):
-                print('Preparing reload...')
                 self.taskMgr.doMethodLater(0, self._Reload, 'reload') # Doing it 0 seconds later
                 return Task.cont
 
@@ -146,10 +144,8 @@ class Spaceship(SphereCollideObject): # Player
                 self.missileBay = 6
             if self.missileBay < 0:
                 self.missileBay = 0
-            print('Reloaded.')
             return Task.done
         elif task.time <= self.reloadTime:
-            print('Reloading...')
             return Task.cont
 
     def CheckIntervals(self, task):
@@ -163,7 +159,6 @@ class Spaceship(SphereCollideObject): # Player
                 del Missile.fireModels[i]
                 del Missile.cNodes[i]
                 del Missile.collisionSolids[i]
-                print(i + ' has reached the end of its fire solution.')
                 break # Memory still used when dictionary objects are deleted, so we break to refactor.
 
         return Task.cont
@@ -172,9 +167,7 @@ class Spaceship(SphereCollideObject): # Player
         '''Handles debugging for collisions, and parses for missile collision detection with drones.'''
 
         fromNode = entry.getFromNodePath().getName()
-        print("fromNode: " + fromNode)
         intoNode = entry.getIntoNodePath().getName()
-        print("intoNode: " + intoNode)
 
         intoPosition = Vec3(entry.getSurfacePoint(self.base.render))
 
@@ -189,9 +182,7 @@ class Spaceship(SphereCollideObject): # Player
         strippedString = strippedString.split('-')[0] # Remove pattern identifier
 
         if (strippedString == 'Drone'):
-            print(shooter + ' is DONE...')
             Missile.Intervals[shooter].finish()
-            print(victim, 'hit at', intoPosition, 'by', shooter)
             self.DroneDestroy(victim, intoPosition)
         
         elif strippedString == "Planet":
@@ -206,16 +197,16 @@ class Spaceship(SphereCollideObject): # Player
             try:
                 Missile.Intervals[shooter].finish()
             except KeyError: # This is required to keep the program from crashing, but doesn't fix the problem.
-                print('Faulty missile!')
+                pass
     
     def DroneDestroy(self, hitID, hitPosition):
-        '''Find a drone with hitID, detach it's node, then cause a particle explosions at it's position.'''
+        '''Find a drone with hitID, detach its node, then cause a particle explosions at it's position.'''
 
         nodeID = self.base.render.find(hitID)
         try:
             nodeID.detachNode()
         except AssertionError: # This is required to keep the program from crashing, but doesn't fix the problem.
-            print('Drone not found.')
+            pass
         self.explodeNode.setPos(hitPosition)
         self.Explode(hitPosition)
     
@@ -232,31 +223,28 @@ class Spaceship(SphereCollideObject): # Player
     def PlanetShrink(self, nodeID: NodePath, task):
         if task.time < 2.0:
             if nodeID.getBounds().getRadius() > 0:
-                scaleSubtraction = 10
+                if nodeID.getScale() < 0:
+                    nodeID.detachNode()
+                    return task.done
+                scaleSubtraction = 5
                 nodeID.setScale(nodeID.getScale() - scaleSubtraction)
-                print(nodeID.getScale())
                 
                 temp = 30 * random.random()
                 nodeID.setH(nodeID.getH() + temp)
                 return task.cont
-        
-        else:
-            nodeID.detachNode()
-            return task.done
     
     def SpaceStationShrink(self, nodeID: NodePath, task):
         if task.time < 2.0:
             if nodeID.getBounds().getRadius() > 0:
-                scaleSubtraction = 2
+                if nodeID.getScale() < 0:
+                    nodeID.detachNode()
+                    return task.done
+                scaleSubtraction = 0.01
                 nodeID.setScale(nodeID.getScale() - scaleSubtraction)
-                print(nodeID.getScale())
+                
                 temp = 30 * random.random()
                 nodeID.setH(nodeID.getH() + temp)
                 return task.cont
-        
-        else:
-            nodeID.detachNode()
-            return task.done
     
     def Explode(self, impactPoint):
         '''Handles particle generation and LerpFunc execution.'''

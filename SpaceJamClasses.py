@@ -113,12 +113,17 @@ class Wanderer(SphereCollideObject):
         self.staringAt = staringAt
         Wanderer.numWanderers += 1
 
-        posInterval0 = self.modelNode.posInterval(20, Vec3(300, 6000, 500), startPos = Vec3(0, 0, 0))
-        posInterval1 = self.modelNode.posInterval(20, Vec3(700, -2000, 100), startPos = Vec3(300, 6000, 500))
-        posInterval2 = self.modelNode.posInterval(20, Vec3(0, -900, -1400), startPos = Vec3(700, -2000, 100))
+        # Unique start positions and names for each drone
+        if Wanderer.numWanderers == 1:
+            start_position = Vec3(0, 0, 0)
+        else:
+            start_position = Vec3(100, 100, 100)
+        posInterval0 = self.modelNode.posInterval(20, Vec3(300, 6000, 500), startPos=start_position)
+        posInterval1 = self.modelNode.posInterval(20, Vec3(700, -2000, 100), startPos=Vec3(300, 6000, 500))
+        posInterval2 = self.modelNode.posInterval(20, Vec3(0, -900, -1400), startPos=Vec3(700, -2000, 100))
 
-        self.travelRoute = Sequence(posInterval0, posInterval1, posInterval2, name = "Traveler")
-
+        sequence_name = f"Traveler{Wanderer.numWanderers}"
+        self.travelRoute = Sequence(posInterval0, posInterval1, posInterval2, name=sequence_name)
         self.travelRoute.loop()
 
 
