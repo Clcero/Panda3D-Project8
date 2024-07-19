@@ -24,6 +24,7 @@ class MyApp(ShowBase):
         self.SetCollisions()
         self.SetupScene()
         self.SetCamera()
+        self.SetMusic()
         self.SetPlayerCollisions()
 
         # Start setting key bindings.    
@@ -159,6 +160,11 @@ class MyApp(ShowBase):
         self.disableMouse()
         self.camera.reparentTo(self.Hero.modelNode)
         self.camera.setFluidPos(0, -50, 6) # Behind and slightly above model
+    
+    def SetMusic(self):
+        self.BGMusic = self.loader.loadSfx("./Assets/Music/background.mp3")
+        self.BGMusic.setLoop(True)
+        self.BGMusic.play() 
 
         
     # Prepare message if server wants to quit.
